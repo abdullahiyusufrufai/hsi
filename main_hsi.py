@@ -1,5 +1,3 @@
-## main HSI code 
-
 import os
 import time
 import numpy as np
@@ -10,9 +8,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional, Dict, Tuple
 
-# OpenHSI imports
-from openhsi.capture import CameraProperties, ProcessDatacube
-from openhsi.data import load_calibration, save_calibration
+# OpenHSI imports - Corrected for current API
+from openhsi.data import CameraProperties, ProcessDatacube, load_calibration, save_calibration
 import openhsi.utils as utils
 
 # Hardware imports
@@ -88,6 +85,7 @@ class OpenHSIPushPullSystem:
             if not cal_path.exists():
                 self.create_minimal_calibration(cal_path)
             
+            # Updated initialization for newer OpenHSI versions
             self.cam_props = CameraProperties(json_path=str(settings_path), cal_path=str(cal_path))
             self.calibration = load_calibration(str(cal_path))
             self.logger.info("OpenHSI system initialized successfully")
@@ -197,6 +195,7 @@ class OpenHSIPushPullSystem:
             # This stacks our captured lines along the Y axis
             cube = np.stack(self.scan_images, axis=0)
             
+            # Note: Newer OpenHSI versions might expect the cube in a specific orientation
             processor = ProcessDatacube(
                 data=cube,
                 camera_props=self.cam_props,

@@ -11,13 +11,13 @@ import threading
 import queue
 
 # OpenHSI imports
-from openhsi.capture import CameraProperties, ProcessDatacube
-from openhsi.data import load_calibration, save_calibration
-from openhsi.atmos import EmpiricalLineCalibration
+from openhsi.capture import ProcessDatacube, 
+from openhsi.data import *
+from openhsi.atmos import ELC
 import openhsi.utils as utils
 
 # Hardware imports (keep for your Arduino control)
-import RPi.GPIO as GPIO
+#import RPi.GPIO as GPIO
 try:
     from picamera2 import Picamera2
     PICAM_AVAILABLE = True
@@ -26,17 +26,17 @@ except ImportError:
     print("Warning: picamera2 not available")
 
 # GPIO Configuration (keep your hardware interface)
-GPIO_TRIGGER = 17
-GPIO_STATUS = 27
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
-GPIO.setup(GPIO_STATUS, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+#GPIO_TRIGGER = 17
+#GPIO_STATUS = 27
+#GPIO.setmode(GPIO.BCM)
+#GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
+#GPIO.setup(GPIO_STATUS, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 class OpenHSIPushPullSystem:
      def __init__(
         self,
         config_dir: str = "openhsi_config",
-        target_resolution: Tuple[int, int] = (224, 224)
+        target_resolution: Tuple[int, int] = (480, 224)
     ):
         """
         Push-pull HSI system using OpenHSI methods and calibration.
@@ -54,9 +54,9 @@ class OpenHSIPushPullSystem:
         self.calibration = None
         
         # Scanning parameters
-        self.scan_positions = 10
-        self.step_distance_mm = 0.1
-        self.exposure_time_ms = 5000
+        #self.scan_positions = 10
+        #self.step_distance_mm = 0.1
+        #self.exposure_time_ms = 5000
         
         # OpenHSI processing level
         self.processing_lvl = 4  # Radiance output (µW/cm²/sr/nm)
